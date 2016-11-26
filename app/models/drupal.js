@@ -8,7 +8,21 @@ var DrupalModulesSchema = new Schema({
     type: String,
     required: [true, 'Module name is required'],
     unique: true,
-    dropDups: true
+    dropDups: true,
+    // use minlength validation. this is an example
+    validate: {
+      // If your validator function takes 2 arguments, mongoose will assume
+      // the 2nd argument is a callback.
+      validator: function(v) {
+        return v.length > 3;
+      },
+      message: '{VALUE} is too short. Module name must be at least 4 characters'
+    },
+  },
+  project_type: {
+    type: String,
+    enum: ['Module', 'Theme', 'Translation'],
+    default: 'Module'
   },
   description: {
     type: String,
@@ -16,7 +30,8 @@ var DrupalModulesSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    max: Date.now
   },
   link: {
     type: String,
@@ -36,8 +51,15 @@ var DrupalModulesSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Category'
   }
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }, retainKeyOrder: true }
+);
+
+// Virtual field. Is not stored in DB
+DrupalModulesSchema.virtual('full_name').get(function () {
+  return this.name;
 });
 
+// Validates ObjectId references
 DrupalModulesSchema.plugin(idvalidator);
 
-module.exports = mongoose.model('Drupal', DrupalModulesSchema);
+module.exports = DrupalModulesSchema;

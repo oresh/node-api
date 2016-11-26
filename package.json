@@ -1,14 +1,14 @@
 {
   "name": "node-api",
-  "main": "server.js",
+  "main": "drupal.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/scotch-io/node-token-authentication"
+    "url": "https://github.com/oresh/node-api"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node drupal.js"
   },
-  "author": "Chris Sevilleja <scotch.io>",
+  "author": "oresh",
   "license": "MIT",
   "dependencies": {
     "express": "~4.0.0",

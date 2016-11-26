@@ -12,7 +12,7 @@ Using the new Express 4.0 Router to build an API
 
 - Clone the repo: `git clone git@github.com:scotch-io/node-api`
 - Install dependencies: `npm install`
-- Start the server: `node server.js`
+- Start the server: `node drupal.js`
 
 ## Testing the API
 Test your API using [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)
