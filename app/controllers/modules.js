@@ -42,21 +42,28 @@ var modulesController = {
   },
   // upade module by id
   update: function (req, res) {
-  	ModulesModel.findById(req.params.module_id, function(err, modules) {
+    var module_id = req.params.module_id;
+    ModulesModel.update({ _id: module_id }, { $set: req.body }, function(err) {
       if (err) res.send(err);
+      res.json({ message: 'Module updated!' });
+    });
 
-      for (var prop in req.body) {
-        if(!req.body.hasOwnProperty(prop)) continue;
-        module[prop] = req.body[prop];
-    	}
+    return;
 
+    // As alternative you can find the record by id, edit and save.
+  	/* ModulesModel.findById(module_id, function(err, modules) {
+      if (err) res.send(err);
+      modules = _h.fill(req, modules);
       modules.save(function(err) {
         if (err) res.send(err);
         res.json({ message: 'Module updated!' });
       });
-    });
+    }); */
+
   },
   // delete module by id, or array of ids.
+  // This can be the same request width different params, but wanted the
+  // messages to be different :)
   delete : function (req, res) {
     if (typeof req.body.module_id == 'object') {
       var ids = _h.ObjtoArr(req.body.module_id);
