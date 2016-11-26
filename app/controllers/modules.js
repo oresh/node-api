@@ -43,6 +43,7 @@ var modulesController = {
   // upade module by id
   update: function (req, res) {
     var module_id = req.params.module_id;
+    // To get the item back, use findByIdAndUpdate with 2nd parametr in callback
     ModulesModel.update({ _id: module_id }, { $set: req.body }, function(err) {
       if (err) res.send(err);
       res.json({ message: 'Module updated!' });

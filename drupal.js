@@ -19,6 +19,7 @@ mongoose.connect('mongodb://localhost/Drupal'); // connect to our database
 var modulesController = require('./app/controllers/modules');
 var vocabulariesController = require('./app/controllers/vocabularies');
 var categoryController = require('./app/controllers/categories');
+var UsersController = require('./app/controllers/users');
 
 // ROUTES FOR OUR API
 // =============================================================================
@@ -46,6 +47,15 @@ router.route('/categories')
 router.route('/vocabularies')
   .post(function(req, res) { vocabulariesController.post(req, res); })
   .get(function(req, res) { vocabulariesController.get(req, res); });
+
+// Users
+router.route('/users')
+  .get(function(req, res) { UsersController.get(req, res); });
+
+router.route('/user/register')
+  .post(function(req, res) { UsersController.create(req, res); })
+router.route('/user/login')
+  .post(function(req, res) { UsersController.login(req, res); })
 
 // Modules
 router.route('/modules')
