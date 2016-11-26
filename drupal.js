@@ -50,7 +50,8 @@ router.route('/vocabularies')
 // Modules
 router.route('/modules')
   .post(function(req, res) { modulesController.post(req, res); })
-  .get(function(req, res) { modulesController.get(req, res); });
+  .get(function(req, res) { modulesController.get(req, res); })
+  .delete(function(req, res) { modulesController.delete(req, res); });
 router.route('/modules/:module_id')
   .get(function(req, res) { modulesController.getById(req, res); })
   .put(function(req, res) { modulesController.update(req, res); })

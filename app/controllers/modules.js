@@ -56,15 +56,26 @@ var modulesController = {
       });
     });
   },
-  // delete module by id
+  // delete module by id, or array of ids.
   delete : function (req, res) {
-  	ModulesModel.remove({
-      _id: req.params.module_id
-    }, function(err, modules) {
-      if (err) res.send(err);
-      res.json({ message: 'Successfully deleted' });
-    });
-  }
+    if (typeof req.body.module_id == 'object') {
+      var ids = _h.ObjtoArr(req.body.module_id);
+      ModulesModel.remove({ _id: { $in: ids } }, function(err, modules) {
+        if (err) res.send(err);
+        if (!modules.length) res.json({ message: 'No modules found' });
+        else res.json({ message: 'Modules successfully deleted.' });
+      });
+    } else {
+      var module_id = req.params.module_id ? req.params.module_id : req.body.module_id;
+    	ModulesModel.remove({
+        _id: module_id
+      }, function(err, modules) {
+        if (err) res.send(err);
+        if (!modules.length) res.json({ message: 'No modules found' });
+        else res.json({ message: 'Successfully deleted' });
+      });
+    }
+  },
 }
 
 module.exports = modulesController;
