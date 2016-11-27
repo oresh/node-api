@@ -23,6 +23,7 @@ var CategoriesSchema = new Schema({
   }
 });
 
+// Validates ObjectId references
 CategoriesSchema.plugin(idvalidator);
 
-module.exports = mongoose.model('Category', CategoriesSchema);
+module.exports = CategoriesSchema;

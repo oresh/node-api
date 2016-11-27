@@ -6,6 +6,11 @@ var _helper = {
       schema[prop] = req.body[prop];
     }
     return schema;
+	},
+	ObjtoArr: function(obj) {
+		return arr = Object.keys(obj).map(function (key) {
+      return obj[key];
+    });
 	}
 }
 

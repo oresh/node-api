@@ -2,8 +2,6 @@
 
 Using the new Express 4.0 Router to build an API
 
-[Read the tutorial](http://scotch.io/tutorials/javascript/build-a-restful-api-using-node-and-express-4)
-
 ## Requirements
 
 - Node and npm
@@ -12,7 +10,9 @@ Using the new Express 4.0 Router to build an API
 
 - Clone the repo: `git clone git@github.com:scotch-io/node-api`
 - Install dependencies: `npm install`
-- Start the server: `node server.js`
+- Start the server: `npm start`
 
 ## Testing the API
-Test your API using [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)
+Run `npm test` to run tests. You'll need dev dependencies installed.
+
+You can also test API methods with [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)

@@ -13,4 +13,4 @@ var VocabulariesSchema = new Schema({
   },
 });
 
-module.exports = mongoose.model('Vocabulary', VocabulariesSchema);
+module.exports = VocabulariesSchema;
