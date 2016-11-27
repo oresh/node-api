@@ -56,8 +56,9 @@ var UsersController = {
       user.comparePassword(password, function(err, isMatch) {
           if (err) throw err;
           if (isMatch) {
+            var userObject = user.toObject();
             // if user is found and password is right create a token
-            var token = jwt.sign(user, config.secretToken, {
+            var token = jwt.sign(userObject, config.secretToken, {
               expiresIn: '1 day' // expires in 24 hours
             });
             res.json({
