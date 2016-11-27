@@ -25,6 +25,14 @@ var UsersController = {
       res.json(modules);
     });
   },
+  // create new user
+  edit : function (req, res) {
+    var user_id = req.decoded._doc._id;
+    UsersModel.update({ _id: user_id }, { $set: req.body }, function(err) {
+      if (err) res.send(err);
+      res.json({ message: 'Your profile has been updated!' });
+    });
+  },
   // get list of all users
   login : function (req, res) {
     var email = req.body.email;
@@ -41,7 +49,7 @@ var UsersController = {
     UsersModel.findOne({ email: email }, function(err, user) {
       if (err) throw err;
       if (user === null) {
-        res.json({ message: 'User doesnt exist' });
+        res.json({ message: 'User does not exist' });
         return;
       }
 

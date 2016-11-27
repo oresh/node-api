@@ -49,8 +49,6 @@ var modulesController = {
       res.json({ message: 'Module updated!' });
     });
 
-    return;
-
     // As alternative you can find the record by id, edit and save.
   	/* ModulesModel.findById(module_id, function(err, modules) {
       if (err) res.send(err);

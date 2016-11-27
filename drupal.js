@@ -2,6 +2,8 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var app        = express();
 var morgan     = require('morgan');
+var config = require('./app/configs/config');
+var jwt = require('jsonwebtoken');
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -48,15 +50,6 @@ router.route('/vocabularies')
   .post(function(req, res) { vocabulariesController.post(req, res); })
   .get(function(req, res) { vocabulariesController.get(req, res); });
 
-// Users
-router.route('/users')
-  .get(function(req, res) { UsersController.get(req, res); });
-
-router.route('/user/register')
-  .post(function(req, res) { UsersController.create(req, res); })
-router.route('/user/login')
-  .post(function(req, res) { UsersController.login(req, res); })
-
 // Modules
 router.route('/modules')
   .post(function(req, res) { modulesController.post(req, res); })
@@ -66,6 +59,45 @@ router.route('/modules/:module_id')
   .get(function(req, res) { modulesController.getById(req, res); })
   .put(function(req, res) { modulesController.update(req, res); })
   .delete(function(req, res) { modulesController.delete(req, res); });
+
+// Users
+router.route('/users')
+  .get(function(req, res) { UsersController.get(req, res); });
+
+router.route('/user/register')
+  .post(function(req, res) { UsersController.create(req, res); })
+router.route('/user/login')
+  .post(function(req, res) { UsersController.login(req, res); })
+
+// token dependent routes
+
+router.use(function(req, res, next) {
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  if (token) {
+    // verifies secret and checks exp
+    jwt.verify(token, config.secretToken, function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+    });
+
+  } else {
+    // if there is no token return an error
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
+});
+
+router.route('/user/edit')
+  .put(function(req, res) { UsersController.edit(req, res); })
 
 
 // REGISTER OUR ROUTES -------------------------------
