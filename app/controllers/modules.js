@@ -19,7 +19,7 @@ var modulesController = {
         }
       }
       if (err) res.send(err);
-      res.json({ message: 'Module created!' });
+      res.json({ message: 'Module created!', module : module });
     });
   },
   // get all modules
@@ -44,9 +44,9 @@ var modulesController = {
   update: function (req, res) {
     var module_id = req.params.module_id;
     // To get the item back, use findByIdAndUpdate with 2nd parametr in callback
-    ModulesModel.update({ _id: module_id }, { $set: req.body }, function(err) {
+    ModulesModel.findByIdAndUpdate({ _id: module_id }, { $set: req.body }, function(err, module) {
       if (err) res.send(err);
-      res.json({ message: 'Module updated!' });
+      res.json({ message: 'Module updated!', module : module });
     });
 
     // As alternative you can find the record by id, edit and save.
@@ -69,7 +69,7 @@ var modulesController = {
       ModulesModel.remove({ _id: { $in: ids } }, function(err, modules) {
         if (err) res.send(err);
         if (!modules.length) res.json({ message: 'No modules found' });
-        else res.json({ message: 'Modules successfully deleted.' });
+        else res.json({ message: 'Modules successfully deleted.', deleted: true });
       });
     } else {
       var module_id = req.params.module_id ? req.params.module_id : req.body.module_id;
@@ -78,7 +78,7 @@ var modulesController = {
       }, function(err, modules) {
         if (err) res.send(err);
         if (!modules.length) res.json({ message: 'No modules found' });
-        else res.json({ message: 'Successfully deleted' });
+        else res.json({ message: 'Successfully deleted', deleted: true });
       });
     }
   },

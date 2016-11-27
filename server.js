@@ -1,9 +1,16 @@
+var config = require('config'); //we load the db location from the JSON files
 var express    = require('express');
 var bodyParser = require('body-parser');
 var app        = express();
 var morgan     = require('morgan');
-var config = require('./app/configs/config');
+var appConfig = require('./app/configs/config');
 var jwt = require('jsonwebtoken');
+
+var options = {
+  server: { socketOptions: { keepAlive: 1, connectTimeoutMS: 30000 } },
+  replset: { socketOptions: { keepAlive: 1, connectTimeoutMS : 30000 } }
+};
+
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -15,7 +22,13 @@ app.use(bodyParser.json());
 var port = process.env.PORT || 8080;
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/Drupal'); // connect to our database
+mongoose.connect(config.DBHost, options); // connect to our database
+
+//don't show the log when it is test
+if(config.util.getEnv('NODE_ENV') !== 'test') {
+    //use morgan to log at command line
+    app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
+}
 
 // controllers
 var modulesController = require('./app/controllers/modules');
@@ -31,7 +44,6 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-  console.log('Something is happening.');
   next();
 });
 
@@ -77,7 +89,7 @@ router.use(function(req, res, next) {
 
   if (token) {
     // verifies secret and checks exp
-    jwt.verify(token, config.secretToken, function(err, decoded) {
+    jwt.verify(token, appConfig.secretToken, function(err, decoded) {
       if (err) {
         return res.json({ success: false, message: 'Failed to authenticate token.' });
       } else {
@@ -107,3 +119,5 @@ app.use('/api', router);
 // =============================================================================
 app.listen(port);
 console.log('Magic happens on port ' + port);
+
+module.exports = app; // for testing

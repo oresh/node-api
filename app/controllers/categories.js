@@ -13,7 +13,7 @@ var categoryController = {
       if (err) {
         res.send(err);
       }
-      res.json({ message: 'Category created!' });
+      res.json({ message: 'Category created!', category: category });
     });
   },
   // get list of all categories

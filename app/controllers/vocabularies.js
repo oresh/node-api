@@ -11,7 +11,7 @@ var vocabulariesController = {
 
     vocabulary.save(function(err) {
       if (err) res.send(err);
-      res.json({ message: 'Vocabulary created!' });
+      res.json({ message: 'Vocabulary created!', vocabulary : vocabulary });
     });
   },
   // get list of all vocabularies

@@ -15,22 +15,22 @@ var UsersController = {
 
     newUser.save(function(err) {
       if (err) res.send(err);
-      res.json({ message: 'User created!' });
+      res.json({ message: 'User created!', user: newUser });
     });
   },
   // get list of all users
   get : function (req, res) {
-    UsersModel.find().sort({_id: 'descending'}).find(function(err, modules) {
+    UsersModel.find().sort({_id: 'descending'}).find(function(err, users) {
       if (err) res.send(err);
-      res.json(modules);
+      res.json(users);
     });
   },
   // create new user
   edit : function (req, res) {
     var user_id = req.decoded._doc._id;
-    UsersModel.update({ _id: user_id }, { $set: req.body }, function(err) {
+    UsersModel.findByIdAndUpdate({ _id: user_id }, { $set: req.body }, function(err, user) {
       if (err) res.send(err);
-      res.json({ message: 'Your profile has been updated!' });
+      res.json({ message: 'Your profile has been updated!', user: user });
     });
   },
   // get list of all users
@@ -63,6 +63,7 @@ var UsersController = {
             });
             res.json({
               message: 'Successfull login',
+              user: user,
               token : token
             });
           } else {
