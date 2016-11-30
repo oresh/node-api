@@ -27,7 +27,7 @@ mongoose.connect(config.DBHost, options); // connect to our database
 //don't show the log when it is test
 if(config.util.getEnv('NODE_ENV') !== 'test') {
     //use morgan to log at command line
-    app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
+    //app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
 }
 
 // controllers
@@ -38,6 +38,31 @@ var UsersController = require('./app/controllers/users');
 
 // ROUTES FOR OUR API
 // =============================================================================
+
+var validateToken = function(req, res, next) {
+  // check header or url parameters or post parameters for token
+  var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+  if (token) {
+    // verifies secret and checks exp
+    jwt.verify(token, appConfig.secretToken, function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        // if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+    });
+
+  } else {
+    // if there is no token return an error
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
+}
 
 // create our router
 var router = express.Router();
@@ -82,31 +107,7 @@ router.route('/user/login')
   .post(function(req, res) { UsersController.login(req, res); })
 
 // token dependent routes
-
-router.use(function(req, res, next) {
-  // check header or url parameters or post parameters for token
-  var token = req.body.token || req.query.token || req.headers['x-access-token'];
-
-  if (token) {
-    // verifies secret and checks exp
-    jwt.verify(token, appConfig.secretToken, function(err, decoded) {
-      if (err) {
-        return res.json({ success: false, message: 'Failed to authenticate token.' });
-      } else {
-        // if everything is good, save to request for use in other routes
-        req.decoded = decoded;
-        next();
-      }
-    });
-
-  } else {
-    // if there is no token return an error
-    return res.status(403).send({
-      success: false,
-      message: 'No token provided.'
-    });
-  }
-});
+router.use(validateToken);
 
 router.route('/user/edit')
   .put(function(req, res) { UsersController.edit(req, res); })

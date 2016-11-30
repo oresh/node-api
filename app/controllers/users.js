@@ -27,8 +27,8 @@ var UsersController = {
   },
   // create new user
   edit : function (req, res) {
-    var user_id = req.decoded._doc._id;
-    UsersModel.findByIdAndUpdate({ _id: user_id }, { $set: req.body }, function(err, user) {
+    var user_id = req.decoded._id;
+    UsersModel.findByIdAndUpdate( user_id , { $set: req.body }, function(err, user) {
       if (err) res.send(err);
       res.json({ message: 'Your profile has been updated!', user: user });
     });
